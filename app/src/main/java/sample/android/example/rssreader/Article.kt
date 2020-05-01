@@ -29,8 +29,14 @@ data class Article(
     /**
      * 発行日時
      */
-    @ColumnInfo val pubDate: Date
+    @ColumnInfo val pubDate: Date,
+
+    /**
+     * 画像URL
+     */
+    @ColumnInfo val imageUrl: String
 )
+
 {
     /**
      * 発行日時を指定のフォーマットで出力する処理

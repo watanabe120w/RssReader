@@ -43,7 +43,10 @@ fun parseRss(stream: InputStream) : Rss {
         val article = Article(
             title = xPath.evaluate("./title/text()", item),
             link  = xPath.evaluate("./link/text()", item),
-            pubDate = formatter.parse(xPath.evaluate("./pubDate/text()", item)))
+            pubDate = formatter.parse(xPath.evaluate("./pubDate/text()", item)),
+            // 画像URLはRSSには含まれていないので、アクセスするたびに違う画像を返すURLを設定する
+            imageUrl = RANDOM_IMAGE_URL)
+
 
         articles.add(article)
     }

@@ -34,10 +34,10 @@ class MainFragment: Fragment() {
         // UIにアダプタとレイアウトをバインディングする
         val binding = FragmentMainBinding.inflate(inflater, container, false)
         val adapter = ArticlesAdapter()
-        val layoutManager = GridLayoutManager(requireContext(), 2)
+        //val layoutManager = GridLayoutManager(requireContext(), 2)
         binding.apply {
             this.articles.adapter = adapter
-            this.articles.layoutManager = layoutManager
+            //this.articles.layoutManager = layoutManager
         }
         // 購読処理
         subscribeUi(adapter)

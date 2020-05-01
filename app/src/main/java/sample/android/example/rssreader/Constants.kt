@@ -18,3 +18,8 @@ const val RSS_REQUEST_INTERVAL = 15L
  */
 const val DISPLAY_PUBLISH_DATE_FORMAT = "yyyy年M月d日 H時m分"
 
+/**
+ * アクセスする度に画像が変わるURL
+ */
+const val RANDOM_IMAGE_URL = "https://picsum.photos/400"
+
