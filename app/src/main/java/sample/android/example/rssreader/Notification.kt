@@ -32,8 +32,7 @@ fun createChannel(context: Context) {
     }
 
     // 端末にチャンネルを登録する
-    val manager = context.getSystemService(NotificationManager::class.java)
-    manager.createNotificationChannel(channel)
+    context.getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
 }
 
 // 更新通知を行う

@@ -11,7 +11,7 @@ import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
 // RSSの各記事を表すデータクラス
-data class Article(val title: String, val link: String, val pubDate: Date)
+//data class Article(val title: String, val link: String, val pubDate: Date)
 
 // RSSを表現するデータクラス
 data class Rss(val title: String, val pubDate: Date, val articles: List<Article>)
