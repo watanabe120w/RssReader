@@ -14,10 +14,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import sample.android.example.rssreader.databinding.FragmentMainBinding
 
+/**
+ * メイン画面クラス(Fragment)
+ *
+ */
 class MainFragment: Fragment() {
-
-//    private lateinit var binding: FragmentMainBinding
-
+    /**
+     * ViewModel
+     */
     private val viewModel: MainViewModel by viewModels() {
         InjectorUtils.providerMainViewModelFactory(requireContext())
     }
@@ -27,6 +31,7 @@ class MainFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // UIにアダプタとレイアウトをバインディングする
         val binding = FragmentMainBinding.inflate(inflater, container, false)
         val adapter = ArticlesAdapter()
         val layoutManager = GridLayoutManager(requireContext(), 2)
@@ -34,15 +39,25 @@ class MainFragment: Fragment() {
             this.articles.adapter = adapter
             this.articles.layoutManager = layoutManager
         }
+        // 購読処理
         subscribeUi(adapter)
         return binding.root
     }
+
+    /**
+     * 記事一覧を購読する処理
+     * 記事が更新されたら、RecyclerViewを更新する
+     * @param adapter RecyclerViewのアダプタ
+     */
     private fun subscribeUi(adapter: ArticlesAdapter) {
         viewModel.articles.observe(viewLifecycleOwner) { articleList ->
             adapter.submitList(articleList)
         }
     }
     companion object {
+        /**
+         * ログ用タグ
+         */
         private val TAG = MainFragment::class.java.simpleName
     }
 }

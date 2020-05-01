@@ -14,38 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import sample.android.example.rssreader.databinding.ActivityMainBinding
 import sample.android.example.rssreader.databinding.GridArticleCellBinding
 
-class ArticlesAdapter(
-//    val inflater: LayoutInflater
-//    private val context: Context
-//    private val articles: List<Article>,
-//    private val onArticleClicked: (Article) -> Unit)
-)
-//   : RecyclerView.Adapter<ArticlesAdapter.ArticleViewHolder>() {
+class ArticlesAdapter()
     : ListAdapter<Article, ArticlesAdapter.ArticleViewHolder>(
     ArticleDiffCallback()
 ) {
-
-    //private val inflater = LayoutInflater.from(context)
-
-    //override fun getItemCount() = articles.size
-
     // 新しくViewを作る
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
-//        // Viewを生成する
-//        val view = inflater.inflate(R.layout.grid_article_cell, parent, false)
-//        // ViewHolderを生成する
-//        val viewHolder = ArticleViewHolder(view)
-
-//        // Viewタップ時の処理
-//        view.setOnClickListener {
-//            // タップされた記事の位置
-//            val position = viewHolder.adapterPosition
-//            // タップされた位置に応じた記事
-//            val article = articles[position]
-//            // コールバックを呼ぶ
-//            onArticleClicked(article)
-//        }
-
         return ArticleViewHolder(GridArticleCellBinding.inflate(
             LayoutInflater.from(parent.context),
             parent, false)
@@ -54,19 +28,13 @@ class ArticlesAdapter(
 
     // Viewに表示すべき値を設定する
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-//        // アダプター中の位置に応じた記事を得る
-//        val article = articles[position]
-//        // 記事のタイトルを設定する
-//        holder.title.text = article.title
-//        // 記事の発行日付を設定する
-//        holder.pubDate.text = context.getString(R.string.pubDate, article.pubDate)
-//        holder.bindTo(getItem(position))
         val article = getItem(position)
-        //(holder as ArticleViewHolder).bind(article)
         holder.bind(article)
     }
 
-    // ビューホルダー
+    /**
+     * ビューホルダークラス
+     */
     class ArticleViewHolder(
         private val binding: GridArticleCellBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -75,12 +43,19 @@ class ArticlesAdapter(
                 // 記事をタップしたときの処理
                 val intent = CustomTabsIntent.Builder().build()
                 binding.article?.let { article ->
+                    // 記事のリンク先URLに遷移
                     intent.launchUrl(binding.root.context, Uri.parse(article.link))
                 }
 
             }
         }
 
+        /**
+         * バインド処理
+         * 記事をUIに関連づける
+         *
+         * @param item 記事データ
+         */
         fun bind(item: Article) {
             binding.apply {
                 article = item
@@ -90,8 +65,19 @@ class ArticlesAdapter(
     }
 }
 
+/**
+ * ListAdapter用 更新を検出する用のクラス
+ *
+ */
 private class ArticleDiffCallback : DiffUtil.ItemCallback<Article>() {
 
+    /**
+     * 項目が同じかどうかの判定処理
+     *
+     * @param oldItem 古い項目
+     * @param newItem 新しい項目
+     * @return　true: 同じ false: 違う
+     */
     override fun areItemsTheSame(
         oldItem: Article,
         newItem: Article
@@ -99,6 +85,13 @@ private class ArticleDiffCallback : DiffUtil.ItemCallback<Article>() {
         return oldItem == newItem
     }
 
+    /**
+     * 内容が同じかどうかの判定処理
+     *
+     * @param oldItem 古い項目
+     * @param newItem 新しい項目
+     * @return true: 同じ false: 違う
+     */
     override fun areContentsTheSame(
         oldItem: Article,
         newItem: Article

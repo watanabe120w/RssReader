@@ -5,11 +5,11 @@ import java.util.*
 import kotlin.time.milliseconds
 
 /**
- * Room用変換処理
+ * Room用変換処理クラス
  */
 class RoomTypeConverters {
     /**
-     *  Date型 -> Long型変換
+     *  Date型 -> Long型変換(ms)
      *
      * @param date
      * @return
@@ -18,7 +18,7 @@ class RoomTypeConverters {
     fun fromDateToLong(date: Date): Long = date.time
 
     /**
-     * Long型 -> Date型
+     * Long型(ms) -> Date型
      *
      * @param long
      * @return

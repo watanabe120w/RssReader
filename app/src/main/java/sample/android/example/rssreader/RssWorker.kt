@@ -8,6 +8,15 @@ import androidx.work.WorkerParameters
 import kotlinx.coroutines.coroutineScope
 import java.lang.Exception
 
+/**
+ * Rssを取得する処理(WorkManager)
+ *
+ * @constructor
+ * 初期化処理
+ *
+ * @param context コンテキスト
+ * @param workerParams WorkManager用引数
+ */
 class RssWorker(
     context: Context,
     workerParams: WorkerParameters
@@ -22,8 +31,6 @@ class RssWorker(
                 // Databaseに書き込む
                 val database = AppDatabase.getInstance(applicationContext)
                 database.articleDao().insertAll(rss.articles)
-                val articles= database.articleDao().getArticles()
-                //Log.d(TAG,articles.value.toString())
             } ?:run {
                 Result.failure()
             }
@@ -33,14 +40,25 @@ class RssWorker(
             Result.failure()
         }
     }
+
+    /**
+     * RSSをダウンロードする処理
+     *
+     * @return パース後のデータ(RSS型) 取れなかったらNULL
+     */
     private fun downloadRss(): Rss?{
-        // RSSをダウンロードする
         return httpGet("https://www.sbbit.jp/rss/HotTopics.rss")?.let { response ->
             // RSSオブジェクトにパースする
             parseRss(response)
         }
 
     }
+
+    /**
+     * 必要があれば通知を実施する処理
+     *
+     * @param rss 取得した記事情報
+     */
     private fun notifyIfNeeded(rss: Rss) {
         // プリファレンス
         val prefs = applicationContext.getSharedPreferences("pref_polling", Context.MODE_PRIVATE)
@@ -49,15 +67,18 @@ class RssWorker(
         val lastFetchTime = prefs.getLong("last_publish_time", 0L)
 
         // 記事が一度は取得済みで、更新されている場合
-        //if (lastFetchTime > 0 && lastFetchTime < rss.pubDate.time) {
+        if (lastFetchTime > 0 && lastFetchTime < rss.pubDate.time) {
             // 通知する
             notifyUpdate(applicationContext)
-        //}
+        }
 
         // 取得時間を保存する
         prefs.edit().putLong("last_publish_time", rss.pubDate.time).apply()
     }
     companion object {
+        /**
+         * ログ出力用タグ
+         */
         private val TAG = RssWorker::class.java.simpleName
     }
 }

@@ -29,12 +29,14 @@ class ArticleDaoTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    //@Before fun createDb() = runBlocking {
+    /**
+     * 前処理
+     */
     @Before
     fun setUp() {
         runBlocking {
             articleA = Article("test1","https://www.yahoo.co.jp", Date())
-            delay(1000)
+            delay(1000) // Dateを違う値にするために少しインターバルを空ける
             articleB = Article("test2","https://www.google.co.jp",Date())
             delay(1000)
             articleC = Article("test3","https://shopping.yahoo.co.jp/",Date())
@@ -43,24 +45,29 @@ class ArticleDaoTest {
                 InstrumentationRegistry.getInstrumentation().targetContext    // テスト用コンテキストの取得
             database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
             articleDao = database.articleDao()
-
+            // Insertする順番は変える
             articleDao.insertArticle(articleB)
             articleDao.insertArticle(articleC)
             articleDao.insertArticle(articleA)
         }
-
-
     }
-    //@After fun closeDb() {
+
+    /**
+     * 後処理
+     */
     @After fun tearDown() {
         database.close()
     }
 
+    /**
+     * 記事取得処理テスト
+     */
     @Test fun testGetArticles() {
         val articleList = getValue(articleDao.getArticles())
-        assertThat(articleList[0], equalTo(articleA))
+        assertThat(articleList.count(),equalTo(3))  // 3つInsertしたので、3つ取れるはず
+        // 取得は時間の新しい順になる
+        assertThat(articleList[0], equalTo(articleC))
         assertThat(articleList[1], equalTo(articleB))
-        assertThat(articleList[2], equalTo(articleC))
+        assertThat(articleList[2], equalTo(articleA))
     }
-
 }

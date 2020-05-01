@@ -11,23 +11,32 @@ import java.util.*
 @Entity(
     tableName = "articles"
 )
-//data class Article(val title: String, val link: String, val pubDate: Date)
+/**
+ * 記事クラス(Room Entity)
+ */
 data class Article(
+    /**
+     * タイトル(プライマリーキー)
+     */
     @PrimaryKey
     @ColumnInfo val title: String,
+
+    /**
+     * リンクURL
+     */
     @ColumnInfo val link: String,
+
+    /**
+     * 発行日時
+     */
     @ColumnInfo val pubDate: Date
 )
 {
-//    @PrimaryKey(autoGenerate = true)
-//    @ColumnInfo(name = "id")
-//    var articleId: Long = 0
-
+    /**
+     * 発行日時を指定のフォーマットで出力する処理
+     *
+     * @return フォーマット適用後の発行日時
+     */
     @SuppressLint("SimpleDateFormat")
-    fun pubDateFormattedString():String {
-        val dateFormat = SimpleDateFormat("yyyy年M月d日 H時m分")
-        return dateFormat.format(pubDate)
-        //val ret = SimpleDateFormat(RssReaderApplication().getString(R.string.pubDate)).format(pubDate)
-        //return ret
-    }
+    fun pubDateFormattedString():String = SimpleDateFormat(DISPLAY_PUBLISH_DATE_FORMAT).format(pubDate)
 }
